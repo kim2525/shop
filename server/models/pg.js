@@ -6,6 +6,14 @@ const bcrypt = require('bcrypt')
 
 const pool = new Pool()
 
+function format_date(date)
+{
+    const dd = String(date.getDate()).padStart(2, '0')
+    const mm = String(date.getMonth() + 1).padStart(2, '0')
+    const yyyy = date.getFullYear()
+
+    return (yyyy + '-' +mm + '-' + dd)
+}
 router.post('/signUp',async (req,res)=>{
     const userName = req.body.userName
     const password = req.body.password
@@ -29,6 +37,12 @@ router.post('/login',async (req,res)=>{
         {
             //set session need to before the res.json otherwise it won't set correctly
             delete result.rows[0].password
+            console.log(result.rows[0].birth)
+            if(result.rows[0].birth !== undefined)
+            {
+                const date = new Date(result.rows[0].birth)
+                result.rows[0].birth = format_date(date)
+            }
             req.session.userInfo = result.rows[0]
             res.json({message:"success", userInfo: result.rows[0]})
         }
@@ -38,6 +52,7 @@ router.post('/login',async (req,res)=>{
         }
     }
     catch(err){
+        console.log(err)
         res.json({message:"error",error_detail:err.detail})
     }
 })
@@ -52,6 +67,11 @@ router.post('/userProfile',async(req,res)=>{
         const result = await pool.query("update accounts set username=$1, birth=$2, phone_number=$3 where email=$4 RETURNING *",[userName,birth,phone,email])
         delete result.rows[0].password
         console.log(result)
+        if(result.rows[0].birth !== undefined)
+        {
+            const date = new Date(result.rows[0].birth)
+            result.rows[0].birth = format_date(date)
+        }
         req.session.userInfo = result.rows[0]
         res.json({message:"success"})
     }

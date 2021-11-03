@@ -15,11 +15,10 @@ export default function UserProfile() {
     const {currentUser, checkSession} = useAuth()
     const history = useHistory()
     useEffect(() => {
-        checkSession()
-        if(isnull(currentUser)) return
+        if(isnull(currentUser)) history.push('/')
         setEmail(currentUser.email)
         setUserName(currentUser.username)
-        setBirth(currentUser.birth.slice(0,10))
+        setBirth(currentUser.birth)
         setPhone(currentUser.phone_number)
     }, [currentUser])
 

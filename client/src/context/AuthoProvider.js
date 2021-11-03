@@ -18,12 +18,7 @@ export function AuthoProvider({children}) {
             const res = await axios.get('http://localhost:3000/currentUser')
             if(isnull(currentUser) && isnull(res.data.userInfo)) return  
             if(JSON.stringify(res.data.userInfo) === JSON.stringify(currentUser)) return
-            //console.log(123)
             setCurrentUser(res.data.userInfo)
-            //console.log(res.data.userInfo, currentUser)
-            //setTimeout(() => {console.log(res.data.userInfo, currentUser)}, 1000);
-        
-            
         }
         catch(err)
         {

@@ -5,7 +5,7 @@ export default function Home() {
     const {currentUser, checkSession} = useAuth()
     const [content,setContent] = useState("")
     useEffect(() => {
-        checkSession()
+        // checkSession()
         if(currentUser.username !== undefined) setContent("Hi " + currentUser.username)
     }, [currentUser])
     return (
